@@ -7,7 +7,7 @@ function queryAPI($jsonQuery) {
 
 	$msg = "{\n   \"array\": [\n";
 	echo $msg;
-	
+
 	$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 	if ($socket === false) {
 		die('{"type" : "error", "msg" : "connection error: ' . socket_strerror(socket_last_error()) . '"}]}');
@@ -22,7 +22,7 @@ function queryAPI($jsonQuery) {
 	socket_write($socket, $in, strlen($in));
 	socket_write($socket, ';', 1);
 
-	
+
 
 	$buffer = "";
 	while ($out = socket_read($socket, 2048)) {
@@ -42,7 +42,7 @@ function queryAPI($jsonQuery) {
 }
 
 /* actual logic */
-error_reporting(0);
+error_reporting(E_ALL);
 
 if (!empty($_POST)) {
 	try {
@@ -69,7 +69,7 @@ if (!empty($_POST)) {
 	} catch (Exception $e) {
 
 		die( '{ "type":"error", "msg" : "' . $e -> getMessage() . '"}]}"');
-		
+
 	}
 
 }

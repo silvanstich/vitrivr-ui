@@ -3,7 +3,7 @@
 	<head>
 		<title>vitrivr</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<meta charset="utf-8" /> 
+		<meta charset="utf-8" />
 		<link rel="shortcut icon" href="favicon.ico">
 
 		<link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection"/>
@@ -27,7 +27,7 @@
 		<script type="text/javascript" src="js/nouislider.js"></script>
 		<script type="text/javascript" src="js/tinysort.js"></script>
 		<script type="text/javascript" src="video.js"></script>
-		
+
 
 		<script type="text/javascript" src="js/search.js"></script>
 		<script type="text/javascript" src="js/ui_util.js"></script>
@@ -48,7 +48,7 @@
 		</div>
 		<div id="topbar">
 			<div class="weight-slider-box">
-				
+
 				</div>
 			</div>
 		</div>
@@ -68,6 +68,9 @@
 				<li id="motionsketchbutton">
 					<span><i class="mdi mdi-run"> </i></span>
 				</li>
+				<li id="explorebutton">
+					<span><i class="mdi mdi-compass"> </i></span>
+				</li>
 				<!--<li>
 					<span id="filterbutton"><i class="mdi mdi-filter"> </i></span>
 				</li>-->
@@ -75,11 +78,11 @@
 			<button id="search-button" class="waves-effect waves-light btn btn-large red" style="width: 100%">
 				<i class="material-icons left">search</i>Search
 			</button>
-			
+
 			<button id="rf-button" class="waves-effect waves-light btn btn-large red" style="width: 100%">
 				<i class="material-icons left">youtube_searched_for</i>Relevance Feedback
 			</button>
-			
+
 			<button id="sequence-segmentation-button" class="waves-effect waves-light btn btn-large red" style="width: 100%">
 				<i class="material-icons left">settings_ethernet</i>Split video into sequences
 			</button>
@@ -109,10 +112,10 @@
 		<div id="sidebarextension" class="side-nav z-depth-4">
 			<div id="filter-selection">
 				<div id="resultset-filter-selection">
-					
+
 					<p><input class="with-gap" name="result-set" type="radio" id="no-filter"  checked/>
       				<label for="no-filter">No Filter</label></p>
-					
+
 				</div>
 			        <div class="input-field">
           				<input id="new_filter" type="text" pattern="[0-9]+(-[0-9]+)*" required>

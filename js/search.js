@@ -9,31 +9,31 @@ var rf_negative = new Array();
 
 function getCategories(){
 	var categories = [];
-	
+
 	var ks = Object.keys(categoryConfig);
 	for (var i = 0, len = ks.length; i < len; i++) {
-  		var key = ks[i];	  					
+  		var key = ks[i];
   		if(ScoreWeights[key] > 0){
   			categories.push(key);
-  		}			
+  		}
   	}
-  	
+
   	categories.sort(function(a, b){
   		return (categoryConfig[a].queryOrder || 0) - (categoryConfig[b].queryOrder || 0);
   	});
-  	
+
 	return categories;
 }
 
 function sumWeights(){
 	var sum = 0;
-	
+
 	var ks = Object.keys(categoryConfig);
 	for (var i = 0, len = ks.length; i < len; i++) {
   		var key = ks[i];
   		sum += parseInt(ScoreWeights[key]);
   	}
-	
+
 	return sum > 0 ? sum : 1;
 }
 
@@ -231,7 +231,7 @@ function oboerequest(query, noContext) {
 
 				console.warn(data);
 				Materialize.toast(data.msg, 5000, 'orange');
-				
+
 				break;
 
 			case "result":
@@ -274,6 +274,11 @@ function oboerequest(query, noContext) {
 						break;
 				}
 
+				break;
+
+			case "explorative":
+				console.log(data.msg);
+				show(data.msg);
 				break;
 
 			default:

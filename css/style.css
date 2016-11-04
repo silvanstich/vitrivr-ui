@@ -1,0 +1,24 @@
+html{
+    padding: 0;
+    margin: 0;
+}
+
+.thumb{
+    padding: 0;
+    margin: 0;
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+    
+}
+
+table{
+    padding: 0;
+    margin: 0;
+    border-collapse: collapse;
+}
+
+td, th{
+    padding: 0;
+    margin: 0;
+}
