@@ -276,7 +276,11 @@ function oboerequest(query, noContext) {
 
 				break;
 
-			case "explorative":
+			case "explorative_position":
+				changeLevel(data)
+				break;
+
+			case "explorative_single":
 				show(data);
 				break;
 
