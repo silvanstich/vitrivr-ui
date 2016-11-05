@@ -277,8 +277,7 @@ function oboerequest(query, noContext) {
 				break;
 
 			case "explorative":
-				console.log(data.msg);
-				show(data.msg);
+				show(data);
 				break;
 
 			default:

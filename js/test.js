@@ -1,6 +1,6 @@
 var fetched = new Grid();
-// var host = 'https://s3.amazonaws.com/serge.borb.it/tiler/';
-var host = '/Applications/XAMPP/xamppfiles/htdocs/vitrivr-ui/thumbnails/';
+var tiler = undefined;
+var host = '/vitrivr-ui/thumbnails/';
 
 $(document).ready(function(){
 
@@ -18,18 +18,19 @@ $(document).ready(function(){
   //   oboerequest(JSON.stringify(query));
   // });
 
-  // var fetched = new Grid();
-  // // var host = 'https://s3.amazonaws.com/serge.borb.it/tiler/';
-  // var host = '/Applications/XAMPP/xamppfiles/htdocs/vitrivr-ui/thumbnails/';
-  var tiler = new Tiler($('#container'), {
+  tiler = new Tiler($('#container'), {
     tileSize: 150,
-    x: 3, y: 3,
-    margin: 0,
+    x: 1, y: 1,
+    margin: 2,
 
     fetch: function(tofecth){
       tofecth.forEach(function(tile) {
         var x = tile[0];
         var y = tile[1];
+
+        if (fetched.get(x, y)) {
+          return tiler.show(x, y, fetched.get(x, y));
+        }
 
         oboerequest(JSON.stringify(
           {
@@ -40,10 +41,9 @@ $(document).ready(function(){
           level: 3
         }
       ));
+      })
     }
-  )}
-
-
+  });
 
   tiler.refresh();
 
@@ -61,12 +61,13 @@ $(document).ready(function(){
     grid.css(   '-moz-transform', translate);
     grid.css(        'transform', translate);
 
-    tiler.refresh();
+    // tiler.refresh();
   });
 
   grid.bind('dragend', function(ev, dd) {
     deltaX += dd.deltaX;
     deltaY += dd.deltaY;
+    tiler.refresh();
   });
 
   $(window).resize(function() {
@@ -75,18 +76,23 @@ $(document).ready(function(){
 });
 
 function show(data){
-  if (fetched.get(x, y)) {
-    return tiler.show(x, y, fetched.get(x, y));
-  }
+  var x = data.x;
+  var y = data.y;
+  // if (fetched.get(x, y)) {
+  //   return tiler.show(x, y, fetched.get(x, y));
+  // }
 
   var img = new Image();
 
   img.onload = function() {
-    var tile = $('<img/>').attr('src', img.src);
+    var tile = $('<img/>').attr('src', img.src).addClass('thumb');
 
     tiler.show(x, y, tile);
     fetched.set(x, y, tile);
   };
-
-  img.src = host + data[0] + '.jpg';
+  if(data.msg[0] != ''){
+      img.src = host + data.msg[0] + '.jpg';
+  } else{
+      img.src = host + '1/65537.jpg';
+  }
 }
