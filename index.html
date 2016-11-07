@@ -14,6 +14,7 @@
 		<link type="text/css" rel="stylesheet" href="css/nouislider.css" media="screen,projection" />
 		<link type="text/css" rel="stylesheet" href="video-js.css" media="screen,projection" />
 		<link type="text/css" rel="stylesheet" href="css/main.css"  media="screen,projection"/>
+		<link type="text/css" rel="stylesheet" href="css/style.css"  media="screen,projection"/>
 
 		<script type="text/javascript" src="js/config.js"></script>
 		<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
@@ -27,12 +28,17 @@
 		<script type="text/javascript" src="js/nouislider.js"></script>
 		<script type="text/javascript" src="js/tinysort.js"></script>
 		<script type="text/javascript" src="video.js"></script>
-
+		<script type="text/javascript" src="js/jquery.materialize-autocomplete.js"></script>
 
 		<script type="text/javascript" src="js/search.js"></script>
 		<script type="text/javascript" src="js/ui_util.js"></script>
 		<script type="text/javascript" src="js/init.js"></script>
-
+		<script type="text/javascript" src="js/row.js"></script>
+		<script type="text/javascript" src="js/grid.js"></script>
+		<script type="text/javascript" src="js/tiler.js"></script>
+		<script src="https://rawgit.com/threedubmedia/jquery.threedubmedia/master/event.drag/jquery.event.drag.js"></script>
+		<script type="text/javascript" src="js/myTiler.js"></script>
+		<script type="text/javascript" src="js/test.js"></script>
 	</head>
 
 	<body class="cbp-spmenu-push">
@@ -103,6 +109,25 @@
 				</div>
 			</div>
 
+			<div class="row">
+				<div class="input-field col s12" id="autocomplete">
+					<div class="autocomplete" id="multiple-autocomplete">
+						<div class="ac-input">
+							<input type="text" id="multiple-input" placeholder="Please input tags" data-activates="multiple-dropdown" data-beloworigin="true" autocomplete="off">
+            </div>
+						<ul id="multiple-dropdown" class="dropdown-content ac-dropdown"></ul>
+            <input type="hidden" name="multipleHidden" />
+          </div>
+          <label class="active" for="multiple-input">Multiple autocomplete: </label>
+        </div>
+			</div>
+
+			<div class="row">
+	    	<div class="input-field col s12">
+	    		<div class="ac-users" id="chip-tags"></div>
+	    	</div>
+      </div>
+
 			<div id="query-container-pane" ></div>
 			<button id="btnAddCanvas" class="btn-floating btn-large waves-effect waves-light red">
 				<i class="material-icons">add</i>
@@ -126,14 +151,15 @@
 			</div>
 		</div>
 
-		<div>
+		<div id="result_pane">
 			<button id="btnShowSidebar" class="btn waves-effect waves-light red">
 				<i class="material-icons">create</i>
 			</button>
 			<div id="results">
 
 			</div>
-
+			<div id="container">
+			</div>
 		</div>
 	</body>
 

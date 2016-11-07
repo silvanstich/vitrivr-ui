@@ -1,18 +1,20 @@
 videojs.options.flash.swf = "video-js.swf";
 var shotStartTime = 0;
+var listTags = {};
+var tags = {concepts: []};
 
 function setUpCategories(){
 	var ks = Object.keys(categoryConfig);
 	var sliderBox = $(".weight-slider-box").first();
-	
+
 	for (var i = 0, len = ks.length; i < len; i++) {
   		var key = ks[i];
   		ScoreWeights[key] = categoryConfig[key]['defaultValue'] || 0;
-  		sliderBox.append('<div class="weight-slider"><label for="' + 
-  			key + '-weight">' + 
-  			(categoryConfig[key]['displayName'] || key) + ':</label><div id="' + 
+  		sliderBox.append('<div class="weight-slider"><label for="' +
+  			key + '-weight">' +
+  			(categoryConfig[key]['displayName'] || key) + ':</label><div id="' +
   			key + '-weight" ></div></div>');
-  		
+
   		noUiSlider.create($('#' + key + '-weight').get(0), {
 			start : 100 * ScoreWeights[key],
 			step : 1,
@@ -24,13 +26,13 @@ function setUpCategories(){
 				decimals : 0
 			})
 		});
-		
+
 		$('#' + key + '-weight').get(0).noUiSlider.on('change', buildSliderCallback(key));
 	}
 }
 
 function buildSliderCallback(key){
-	
+
 	return function(_, __, val){
 		if(val > ScoreWeights[key]){
 			readSliders();
@@ -39,7 +41,7 @@ function buildSliderCallback(key){
 				var scale = (100 - val) / (sum - ScoreWeights[key]);
 				var ks = Object.keys(categoryConfig);
 				for (var i = 0, len = ks.length; i < len; i++) {
-  					var k = ks[i];	  					
+  					var k = ks[i];
   					if(k != key){
   						$('#' + k + '-weight').get(0).noUiSlider.set(ScoreWeights[k] * scale);
   					}
@@ -48,7 +50,7 @@ function buildSliderCallback(key){
 		}
 		updateScores(true);
 	};
-	
+
 }
 
 function remove_element(arr, val) {
@@ -60,7 +62,7 @@ function remove_element(arr, val) {
 function updateSliders() {
 
 	readSliders();
-	
+
 	normalizeScoreWeights();
 
 	updateScores(true);
@@ -74,7 +76,73 @@ function readSliders() {
   		var key = ks[i];
   		ScoreWeights[key] = $('#' + key + '-weight').get(0).noUiSlider.get();
   	}
-		
+
+}
+
+/**
+ *set tags for NN
+ */
+function setAvailableTags() {
+	var queryLabels = {
+		queryType : "getLabels"
+	};
+
+	getTags(JSON.stringify(queryLabels));
+}
+
+/**
+ *get tags from DB
+ */
+function getTags(query, noContext) {
+	searchRunning = true;
+	if (noContext === undefined) {
+		noContext = false;
+	}
+	try {
+		var headers = {
+			'Content-Type' : 'application/x-www-form-urlencoded'
+		};
+		oboe({
+			url : cineastHost, //see config.js
+			method : 'POST',
+			body : "query=" + query,
+			headers : headers
+		}).done(function(data) {
+			console.log(data);
+			console.log(data.array[0]);
+			var word = "";
+
+			for (var i = 0; i < data.array[0].concepts.length; i++) {
+				var ks = Object.keys(listTags);
+				for (var j = 0; j < data.array[0].concepts[i].length; j++) {
+					word += data.array[0].concepts[i][j].toUpperCase();
+					if (ks.indexOf(word) == -1) {
+						listTags[word] = [];
+						var elem = {};
+						elem["id"] = data.array[0].concepts[i];
+						elem["text"] = data.array[0].concepts[i];
+						listTags[word].push(elem);
+					} else {
+						var elem = {};
+						elem["id"] = data.array[0].concepts[i];
+						elem["text"] = data.array[0].concepts[i];
+						listTags[word].push(elem);
+					}
+
+				}
+				word ="";
+			}
+			Materialize.toast('Tags loaded!', 4000);
+			$('#multiple-input').prop('disabled', false);
+			searchRunning = false;
+		}).fail(function(data) {
+			console.log("FAIL");
+			console.log(data);
+			searchRunning = false;
+		});
+	} catch(e) {
+		console.warn(e.message + " | " + e.lineNumber);
+	}
 }
 
 
@@ -98,10 +166,10 @@ $(function() {
 			shotInputs[el].color.setLineWidth(width);
 		}
 
-	}); 
-	
+	});
+
 	setUpCategories();
-	
+
 	/*  color picker  */
 	$("#colorInput").spectrum({
 		showPaletteOnly : true,
@@ -119,7 +187,7 @@ $(function() {
  "#747e43",
  "#b3c65e",
  "#66aa83",
- ],["#88d4e9",		
+ ],["#88d4e9",
  "#5d6c8b",
  "#4a1ecf",
  "#b890bd",
@@ -131,26 +199,37 @@ $(function() {
 				shotInputs[el].color.setColor(color);
 			}
 		}
-	}); 
-	
+	});
+
 	/*  context menu  */
 	context.init({
 		compress : true
-	}); 
+	});
 
-	
+
 	/*  buttons  */
 	$("#btnAddCanvas").click(function(e) {
 		e.preventDefault();
 		newShotInput();
 	});
 
+	$("#multiple-input").click(function(event) {
+		var enteredTags = multiple.value;
+		tags["concepts"] = [];
+		console.log(tags["concepts"]);
+		console.log(enteredTags);
+		for (var i = 0; i < enteredTags.length; i++) {
+			tags.concepts.push(enteredTags[i].id);
+			console.log(tags["concepts"]);
+		}
+  });
+
 	$('#btnShowSidebar').click(function() {
 		if ($('#sidebar').hasClass('open') && $('#sidebarextension').hasClass('open')) {
 			$('#sidebarextension').removeClass('open');
 			$('#btnShowSidebar').removeClass('open');
 
-		} 
+		}
 		$('#sidebar').toggleClass('open');
 		$('body').toggleClass('push-toright');
 	});
@@ -166,6 +245,9 @@ $(function() {
 	$('#colorsketchbutton').on('click', function(event) {
 		$('.motionsketch').hide();
 		$('.objectsketch').hide();
+		$('#query-container-pane').show();
+		$('#search-button').show();
+		$('#btnAddCanvas').show();
 		$('#color-tool-pane').show();
 		$('#motion-tool-pane').hide();
 		$('#sidebarextension').removeClass('open');
@@ -177,6 +259,9 @@ $(function() {
 	$('#motionsketchbutton').on('click', function(event) {
 		$('.motionsketch').show();
 		$('.objectsketch').show();
+		$('#query-container-pane').show();
+		$('#search-button').show();
+		$('#btnAddCanvas').show();
 		$('#color-tool-pane').hide();
 		$('#motion-tool-pane').show();
 		$('#sidebarextension').removeClass('open');
@@ -185,9 +270,9 @@ $(function() {
 		$(this).addClass('active');
 
 	});
-	
-	
-	
+
+
+
 	$('#filterbutton').on('click', function(event) {
 		$('.motionsketch').show();
 		$('.objectsketch').show();
@@ -199,15 +284,15 @@ $(function() {
 		$('#filter-selection').show();
 		$(this).parent().siblings().removeClass('active');
 		$(this).parent().addClass('active');
-	}); 
+	});
 
 	$('#search-button').click(function(){
 		search();
 //		$('#btnShowSidebar').click();
 	});
-	
+
 	$('#sequence-segmentation-button').click(sequenceSegmentation);
-	
+
 	$('#rf-button').click(function(){
 		search(-1, rf_positive, rf_negative);
 	});
@@ -216,16 +301,16 @@ $(function() {
 		videojs('videoPlayer').currentTime(shotStartTime);
 		videojs('videoPlayer').play();
 	});
-	
+
 	$('#new-filter-button').click(function() {
 		if(!$('#new_filter').get(0).validity.patternMismatch){
 			var filterName = $('#new_filter').val();
 			addResultSetFilter('v' + filterName);
 			$('#new_filter').val('');
 		}
-		
+
 	});
-	
+
 	$('#fgbgswitch-button').click(function(){
 		this.textContent = (this.textContent == "Foreground") ? "Background" : "Foreground";
 		this.className = (this.className == "waves-effect waves-light btn btn-small red") ? "waves-effect waves-light btn btn-small green" : "waves-effect waves-light btn btn-small red";
@@ -234,16 +319,47 @@ $(function() {
 		}
 	});
 
+	$('#explorebutton').click(function(){
+		$('.motionsketch').hide();
+		$('.objectsketch').hide();
+		$('#color-tool-pane').hide();
+		$('#motion-tool-pane').hide();
+		$('#query-container-pane').hide();
+		$('#btnAddCanvas').hide();
+		$('#search-button').hide();
+		$('#sidebarextension').removeClass('open');
+		$('#btnShowSidebar').removeClass('open');
+		$(this).siblings().removeClass('active');
+		$(this).addClass('active');
+	});
+
 	/*  add first canvas  */
 	newShotInput();
-	
+
 	/* video player */
 	videojs('videoPlayer').on('loadeddata', function() {
 		videojs('videoPlayer').currentTime(shotStartTime);
 		videojs('videoPlayer').play();
 	});
-	
+
 	$('#btnShowSidebar').click();
 	setTimeout(function(){$('#btnShowTopbar').click();}, 500);
+
+	/**
+ *multiple autocompletion
+ */
+	var multiple = $('#multiple-input').materialize_autocomplete({
+					multiple: {
+							enable: true
+					},
+					appender: {
+							el: '.ac-users'
+					},
+					dropdown: {
+							el: '#multiple-dropdown'
+					}
+			});
+
+	multiple.resultCache = listTags;
 
 });

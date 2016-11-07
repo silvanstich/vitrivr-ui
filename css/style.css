@@ -1,17 +1,19 @@
 html{
     padding: 0;
     margin: 0;
+    background-color: black;
 }
 
 .thumb{
     padding: 0;
     margin: 0;
-    height: 150px;
-    width: 150px;
+    height: 100px;
+    width: 100px;
     object-fit: cover;
 
 }
 
 #container{
-
+  width: 1440px;
+  height: 640px;
 }

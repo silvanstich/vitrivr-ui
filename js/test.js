@@ -3,7 +3,7 @@ var host = 'http://localhost/vitrivr-ui/thumbnails/';
 var level = 6;
 var featureName = 'features_averagecolorgrid8';
 $(document).ready(function(){
-
+  setAvailableTags();
   $(document).on('click', 'img', function(){
     if($('#container').hasClass('noClick')){
       $('#container').removeClass('noClick');
@@ -22,7 +22,9 @@ $(document).ready(function(){
     }));
   });
 
-  tiler = new myTiler($('#container'), 1, 1, level);
+  var x = $('#container').width() / 100;
+  var y = $('#container').height() / 100;
+  tiler = new myTiler($('#container'), 1 - Math.floor(x/2), 1 - Math.floor(y/2), level);
 });
 
 function show(data){
@@ -45,14 +47,16 @@ function show(data){
 }
 
 function changeLevel(data){
+  var width = $('#container').width();
+  var height = $('#container').height();
   $('#container').remove();
   var $container = $('<div>');
   $container.attr('id', 'container');
-  $container.width(600).height(600);
+  $container.width(width).height(height);
 
-  $('body').html($container);
+  $('#result_pane').append($container);
 
-  tiler = new myTiler($('#container'), data.msg.x, data.msg.y, level);
+  tiler = new myTiler($('#container'), data.msg.x - Math.floor(width / 100 / 2), data.msg.y - Math.floor(height / 100 / 2), level);
 
   tiler.refresh();
 }
