@@ -1,7 +1,7 @@
 var tiler = undefined;
 var host = 'http://localhost/vitrivr-ui/thumbnails/';
-var level = 3;
-var featureName = 'features_averagecolor';
+var level = 6;
+var featureName = 'features_averagecolorgrid8';
 $(document).ready(function(){
 
   $(document).on('click', 'img', function(){
@@ -9,7 +9,7 @@ $(document).ready(function(){
       $('#container').removeClass('noClick');
       return;
     }
-    console.log('click');
+    if(level == 1) return;
     var img = $(this);
     var src = img.attr('src');
     var id = src.replace(host, '').replace('.jpg', '');
@@ -23,63 +23,6 @@ $(document).ready(function(){
   });
 
   tiler = new myTiler($('#container'), 1, 1, level);
-  // tiler = new Tiler($('#container'), {
-  //   tileSize: 150,
-  //   x: 1, y: 1,
-  //   margin: 2,
-  //
-  //   fetch: function(tofecth){
-  //     tofecth.forEach(function(tile) {
-  //       var x = tile[0];
-  //       var y = tile[1];
-  //
-  //       if (fetched.get(x, y)) {
-  //         return tiler.show(x, y, fetched.get(x, y));
-  //       }
-  //
-  //       oboerequest(JSON.stringify(
-  //         {
-  //         queryType: "explorative_tile_single",
-  //         x: x,
-  //         y: y,
-  //         featureName: featureName,
-  //         level: level
-  //       }
-  //     ));
-  //     })
-  //   }
-  // });
-  //
-  // tiler.refresh();
-  //
-  // var grid = tiler.grid;
-  // var deltaX = 0;
-  // var deltaY = 0;
-  //
-  // grid.bind('drag', function(ev, dd) {
-  //   $('#container').addClass('noClick');
-  //   var x = deltaX + dd.deltaX;
-  //   var y = deltaY + dd.deltaY;
-  //
-  //   var translate = 'translate(' + x + 'px,' + y + 'px)';
-  //
-  //   grid.css('-webkit-transform', translate);
-  //   grid.css(   '-moz-transform', translate);
-  //   grid.css(        'transform', translate);
-  //
-  //   // tiler.refresh();
-  // });
-  //
-  // grid.bind('dragend', function(ev, dd) {
-  //
-  //   deltaX += dd.deltaX;
-  //   deltaY += dd.deltaY;
-  //   tiler.refresh();
-  // });
-  //
-  // $(window).resize(function() {
-  //   tiler.refresh();
-  // });
 });
 
 function show(data){
@@ -112,57 +55,4 @@ function changeLevel(data){
   tiler = new myTiler($('#container'), data.msg.x, data.msg.y, level);
 
   tiler.refresh();
-
-  // tiler = new Tiler($('#container'), {
-  //   tileSize: 150,
-  //   x: data.msg.x, y: data.msg.y,
-  //   margin: 2,
-  //
-  //   fetch: function(tofecth){
-  //     tofecth.forEach(function(tile) {
-  //       var x = tile[0];
-  //       var y = tile[1];
-  //
-  //       if (fetched.get(x, y)) {
-  //         return tiler.show(x, y, fetched.get(x, y));
-  //       }
-  //
-  //       oboerequest(JSON.stringify(
-  //         {
-  //         queryType: "explorative_tile_single",
-  //         x: x,
-  //         y: y,
-  //         featureName: featureName,
-  //         level: 2
-  //       }
-  //     ));
-  //     })
-  //   }
-  // });
-  // fetched = new Grid();
-  // tiler.refresh();
-  //
-  // var grid = tiler.grid;
-  // var deltaX = 0;
-  // var deltaY = 0;
-  //
-  // grid.bind('drag', function(ev, dd) {
-  //   $('#container').addClass('noClick');
-  //   var x = deltaX + dd.deltaX;
-  //   var y = deltaY + dd.deltaY;
-  //
-  //   var translate = 'translate(' + x + 'px,' + y + 'px)';
-  //
-  //   grid.css('-webkit-transform', translate);
-  //   grid.css(   '-moz-transform', translate);
-  //   grid.css(        'transform', translate);
-  //
-  //   // tiler.refresh();
-  // });
-  //
-  // grid.bind('dragend', function(ev, dd) {
-  //   deltaX += dd.deltaX;
-  //   deltaY += dd.deltaY;
-  //   tiler.refresh();
-  // });
 }
