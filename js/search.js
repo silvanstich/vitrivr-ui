@@ -217,8 +217,10 @@ function oboerequest(query, noContext) {
 				updateVideoScore(key);
 			}
 
-			if(Videos.length < 0) sortVideos();
-				$('#sequence-segmentation-button').show();
+			if(Videos.length < 0){
+				sortVideos();
+					$('#sequence-segmentation-button').show();
+			}
 				hideProgress();
 
 			searchRunning = false;
@@ -280,8 +282,8 @@ function oboerequest(query, noContext) {
 				changeLevel(data)
 				break;
 
-			case "explorative_single":
-				show(data);
+			case "explorative_tiles":
+				show(data.response);
 				break;
 
 			default:

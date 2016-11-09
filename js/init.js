@@ -1,7 +1,6 @@
 videojs.options.flash.swf = "video-js.swf";
 var shotStartTime = 0;
-var listTags = {};
-var tags = {concepts: []};
+var topLevels = {};
 
 function setUpCategories(){
 	var ks = Object.keys(categoryConfig);
@@ -79,72 +78,32 @@ function readSliders() {
 
 }
 
-/**
- *set tags for NN
- */
-function setAvailableTags() {
-	var queryLabels = {
-		queryType : "getLabels"
-	};
-
-	getTags(JSON.stringify(queryLabels));
-}
-
-/**
- *get tags from DB
- */
-function getTags(query, noContext) {
-	searchRunning = true;
-	if (noContext === undefined) {
-		noContext = false;
+function getFeatureNamesForExplorative(){
+	var query = {
+		queryType: 'getFeatureNames'
 	}
-	try {
-		var headers = {
-			'Content-Type' : 'application/x-www-form-urlencoded'
-		};
-		oboe({
-			url : cineastHost, //see config.js
-			method : 'POST',
-			body : "query=" + query,
-			headers : headers
-		}).done(function(data) {
-			console.log(data);
-			console.log(data.array[0]);
-			var word = "";
-
-			for (var i = 0; i < data.array[0].concepts.length; i++) {
-				var ks = Object.keys(listTags);
-				for (var j = 0; j < data.array[0].concepts[i].length; j++) {
-					word += data.array[0].concepts[i][j].toUpperCase();
-					if (ks.indexOf(word) == -1) {
-						listTags[word] = [];
-						var elem = {};
-						elem["id"] = data.array[0].concepts[i];
-						elem["text"] = data.array[0].concepts[i];
-						listTags[word].push(elem);
-					} else {
-						var elem = {};
-						elem["id"] = data.array[0].concepts[i];
-						elem["text"] = data.array[0].concepts[i];
-						listTags[word].push(elem);
-					}
-
-				}
-				word ="";
-			}
-			Materialize.toast('Tags loaded!', 4000);
-			$('#multiple-input').prop('disabled', false);
-			searchRunning = false;
-		}).fail(function(data) {
-			console.log("FAIL");
-			console.log(data);
-			searchRunning = false;
-		});
-	} catch(e) {
-		console.warn(e.message + " | " + e.lineNumber);
-	}
+	oboe({
+		url : cineastHost, //see config.js
+		method : 'POST',
+		body : "query=" + JSON.stringify(query),
+		headers : {'Content-Type' : 'application/x-www-form-urlencoded'}
+	}).done(function(data){
+		console.log('request done.')
+		var response = data.array[0].response;
+		for(var i = 0; i < response.length; i++){
+			var text = response[i].text;
+			var id = response[i].id;
+			var topLevel = response[i].topLevel;
+			topLevels[id] = topLevel;
+			var $option = $('<option/>', {id: id, text: text, value: id});
+			$('#selectFeature').append($option);
+		}
+		  var select = $('select').material_select();
+	}).fail(function(data){
+		console.log("FAIL");
+		console.log(data);
+	});
 }
-
 
 $(function() {
 	/*  sliders  */
@@ -169,6 +128,7 @@ $(function() {
 	});
 
 	setUpCategories();
+	getFeatureNamesForExplorative();
 
 	/*  color picker  */
 	$("#colorInput").spectrum({
@@ -250,6 +210,11 @@ $(function() {
 		$('#btnAddCanvas').show();
 		$('#color-tool-pane').show();
 		$('#motion-tool-pane').hide();
+		$('#FeatureSelectContainer').hide();
+		$('#btnGetExplorative').hide();
+		$('#container').hide();
+		$('#results').show();
+		$('#sequence-segmentation-button').show();
 		$('#sidebarextension').removeClass('open');
 		$('#btnShowSidebar').removeClass('open');
 		$(this).siblings().removeClass('active');
@@ -264,6 +229,11 @@ $(function() {
 		$('#btnAddCanvas').show();
 		$('#color-tool-pane').hide();
 		$('#motion-tool-pane').show();
+		$('#FeatureSelectContainer').hide();
+		$('#btnGetExplorative').hide();
+		$('#container').hide();
+		$('#results').show();
+		$('#sequence-segmentation-button').show();
 		$('#sidebarextension').removeClass('open');
 		$('#btnShowSidebar').removeClass('open');
 		$(this).siblings().removeClass('active');
@@ -327,6 +297,11 @@ $(function() {
 		$('#query-container-pane').hide();
 		$('#btnAddCanvas').hide();
 		$('#search-button').hide();
+		$('#FeatureSelectContainer').show();
+		$('#btnGetExplorative').show();
+		$('#container').show();
+		$('#results').hide();
+		$('#sequence-segmentation-button').hide();
 		$('#sidebarextension').removeClass('open');
 		$('#btnShowSidebar').removeClass('open');
 		$(this).siblings().removeClass('active');
@@ -344,22 +319,5 @@ $(function() {
 
 	$('#btnShowSidebar').click();
 	setTimeout(function(){$('#btnShowTopbar').click();}, 500);
-
-	/**
- *multiple autocompletion
- */
-	var multiple = $('#multiple-input').materialize_autocomplete({
-					multiple: {
-							enable: true
-					},
-					appender: {
-							el: '.ac-users'
-					},
-					dropdown: {
-							el: '#multiple-dropdown'
-					}
-			});
-
-	multiple.resultCache = listTags;
 
 });

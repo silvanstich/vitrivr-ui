@@ -10,3 +10,4 @@ const categoryConfig = {
 	edge:{displayName: "Edge", defaultValue: 0.3, queryOrder: 2},
 	motion:{displayName: "Motion", defaultValue: 0, queryOrder: 4}
 };
+const explorativeImgSize = 50;

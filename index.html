@@ -38,7 +38,7 @@
 		<script type="text/javascript" src="js/tiler.js"></script>
 		<script src="https://rawgit.com/threedubmedia/jquery.threedubmedia/master/event.drag/jquery.event.drag.js"></script>
 		<script type="text/javascript" src="js/myTiler.js"></script>
-		<script type="text/javascript" src="js/test.js"></script>
+		<script type="text/javascript" src="js/explorative.js"></script>
 	</head>
 
 	<body class="cbp-spmenu-push">
@@ -109,24 +109,21 @@
 				</div>
 			</div>
 
-			<div class="row">
-				<div class="input-field col s12" id="autocomplete">
-					<div class="autocomplete" id="multiple-autocomplete">
-						<div class="ac-input">
-							<input type="text" id="multiple-input" placeholder="Please input tags" data-activates="multiple-dropdown" data-beloworigin="true" autocomplete="off">
-            </div>
-						<ul id="multiple-dropdown" class="dropdown-content ac-dropdown"></ul>
-            <input type="hidden" name="multipleHidden" />
-          </div>
-          <label class="active" for="multiple-input">Multiple autocomplete: </label>
-        </div>
+			<div class="row" id="FeatureSelectContainer">
+				<div class="input-field col s12">
+			    <select id="selectFeature">
+			    </select>
+			    <label>Materialize Select</label>
+			  </div>
 			</div>
 
 			<div class="row">
-	    	<div class="input-field col s12">
-	    		<div class="ac-users" id="chip-tags"></div>
-	    	</div>
-      </div>
+				<div class="input-field col s12">
+					<button id="btnGetExplorative" class="btn-floating btn-large waves-effect waves-light red">
+						<i class="material-icons">search</i>
+					</button>
+				</div>
+			</div>
 
 			<div id="query-container-pane" ></div>
 			<button id="btnAddCanvas" class="btn-floating btn-large waves-effect waves-light red">
@@ -156,7 +153,6 @@
 				<i class="material-icons">create</i>
 			</button>
 			<div id="results">
-
 			</div>
 			<div id="container">
 			</div>
