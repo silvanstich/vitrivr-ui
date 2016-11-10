@@ -210,9 +210,7 @@ $(function() {
 		$('#btnAddCanvas').show();
 		$('#color-tool-pane').show();
 		$('#motion-tool-pane').hide();
-		$('#FeatureSelectContainer').hide();
-		$('#btnGetExplorative').hide();
-		$('#container').hide();
+		$('.explore').hide();
 		$('#results').show();
 		$('#sequence-segmentation-button').show();
 		$('#sidebarextension').removeClass('open');
@@ -229,9 +227,7 @@ $(function() {
 		$('#btnAddCanvas').show();
 		$('#color-tool-pane').hide();
 		$('#motion-tool-pane').show();
-		$('#FeatureSelectContainer').hide();
-		$('#btnGetExplorative').hide();
-		$('#container').hide();
+		$('.explore').hide();
 		$('#results').show();
 		$('#sequence-segmentation-button').show();
 		$('#sidebarextension').removeClass('open');
@@ -297,9 +293,7 @@ $(function() {
 		$('#query-container-pane').hide();
 		$('#btnAddCanvas').hide();
 		$('#search-button').hide();
-		$('#FeatureSelectContainer').show();
-		$('#btnGetExplorative').show();
-		$('#container').show();
+		$('.explore').show();
 		$('#results').hide();
 		$('#sequence-segmentation-button').hide();
 		$('#sidebarextension').removeClass('open');

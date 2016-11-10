@@ -3,28 +3,38 @@ var host = 'http://localhost/vitrivr-ui/thumbnails/';
 var level = 6;
 var featureName = '';
 $(document).ready(function(){
-  $('body').on('click', 'img', function(){
+  $('body').on('click', 'img', function(event){
     if($('#container').hasClass('noClick')){
       $('#container').removeClass('noClick');
       return;
     }
-    if(level == 0) return;
     var img = $(this);
     var src = img.attr('src');
     var id = src.replace(host, '').replace('.jpg', '');
-    level = level - 1;
-    oboerequest(JSON.stringify({
-      queryType: 'explorative_tile_position',
-      featureName: featureName,
-      level: level,
-      id: id
-    }));
+    if (event.altKey){
+      oboerequest(JSON.stringify({
+        queryType: 'explorative_tile_representative',
+        featureName: featureName,
+        level: level,
+        id: id
+      }));
+      level++;
+    } else {
+      if (level == 0) return;
+      level--;
+      oboerequest(JSON.stringify({
+        queryType: 'explorative_tile_position',
+        featureName: featureName,
+        level: level,
+        id: id
+      }));
+    }
   });
 
   $('#btnGetExplorative').click(function(){
       featureName = $('#selectFeature').val();
       level = topLevels[featureName];
-      console.log(level);
+      $('#displayLevel').text(level);
       recreateContainer();
       var x = $('#container').width() / explorativeImgSize;
       var y = $('#container').height() / explorativeImgSize;
@@ -75,6 +85,7 @@ function changeLevel(data){
   recreateContainer();
   var width = $('#container').width();
   var height = $('#container').height();
+  $('#displayLevel').text(level);
   tiler = new myTiler($('#container'), data.msg.x - Math.floor(width / explorativeImgSize / 2), data.msg.y - Math.floor(height / explorativeImgSize / 2), level);
 
   tiler.refresh();

@@ -109,20 +109,25 @@
 				</div>
 			</div>
 
-			<div class="row" id="FeatureSelectContainer">
+			<div class="row explore" id="FeatureSelectContainer">
 				<div class="input-field col s12">
 			    <select id="selectFeature">
 			    </select>
-			    <label>Materialize Select</label>
+			    <label>Select feature:</label>
 			  </div>
 			</div>
 
-			<div class="row">
+			<div class="row explore">
 				<div class="input-field col s12">
 					<button id="btnGetExplorative" class="btn-floating btn-large waves-effect waves-light red">
 						<i class="material-icons">search</i>
 					</button>
 				</div>
+			</div>
+
+			<div class="row explore" id="displayLevelContainer">
+				<label>current Level: </label>
+				<label id="displayLevel">--</label>
 			</div>
 
 			<div id="query-container-pane" ></div>
@@ -154,7 +159,7 @@
 			</button>
 			<div id="results">
 			</div>
-			<div id="container">
+			<div id="container" class="explore">
 			</div>
 		</div>
 	</body>

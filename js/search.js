@@ -279,12 +279,16 @@ function oboerequest(query, noContext) {
 				break;
 
 			case "explorative_position":
-				changeLevel(data)
+				changeLevel(data);
 				break;
 
 			case "explorative_tiles":
 				show(data.response);
 				break;
+
+			case "explorative_tile_representative":
+				changeLevel(data);
+			break;
 
 			default:
 				console.warn("type not recognized" + JSON.stringify(data));
