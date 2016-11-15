@@ -1,7 +1,9 @@
 var tiler = undefined;
 var host = 'http://localhost/vitrivr-ui/thumbnails/';
-var level = 6;
+var level = undefined;
 var featureName = '';
+var lastClickedId = '';
+
 $(document).ready(function(){
   $('body').on('click', 'img', function(event){
     if($('#container').hasClass('noClick')){
@@ -12,6 +14,7 @@ $(document).ready(function(){
     var src = img.attr('src');
     var id = src.replace(host, '').replace('.jpg', '');
     if (event.altKey){
+      if (level == topLevels[featureName]) return;
       oboerequest(JSON.stringify({
         queryType: 'explorative_tile_representative',
         featureName: featureName,
@@ -19,6 +22,10 @@ $(document).ready(function(){
         id: id
       }));
       level++;
+    } else if (event.shiftKey) {
+      $('.highlight').removeClass('highlight');
+      var representative = img.attr('data-representative');
+      $("[data-representative='" + representative + "']").addClass('highlight');
     } else {
       if (level == 0) return;
       level--;
@@ -29,6 +36,7 @@ $(document).ready(function(){
         id: id
       }));
     }
+    lastClickedId = id;
   });
 
   $('#btnGetExplorative').click(function(){
@@ -38,21 +46,24 @@ $(document).ready(function(){
       recreateContainer();
       var x = $('#container').width() / explorativeImgSize;
       var y = $('#container').height() / explorativeImgSize;
-      tiler = new myTiler($('#container'), 1 - Math.floor(x/2), 1 - Math.floor(y/2), level);
+      var center = centers[featureName];
+      tiler = new myTiler($('#container'), center.x - Math.floor(x/2), center.y - Math.floor(y/2), level);
   });
 
 
 });
 
 function show(data){
+  $('.highlight').removeClass('highlight');
   for (var i = 0; i < data.length; i++){
     var element = data[i];
     var x = element.x;
     var y = element.y;
+    var representative = element.representative;
 
     var img = new Image();
 
-    setSrc(img, x, y);
+    setSrc(img, x, y, element.img, representative);
 
     if(element.img != ''){
         img.src = host + element.img + '.' + thumbnailFileType;
@@ -60,10 +71,11 @@ function show(data){
   }
 }
 
-function setSrc(img, x, y){
+function setSrc(img, x, y, id, representative){
   img.onload = function() {
     var tile = $('<img/>').attr('src', img.src).addClass('thumb');
-
+    tile.attr('id', id);
+    tile.attr('data-representative', representative);
     tiler.show(x, y, tile);
     fetched.set(x, y, tile);
   };
@@ -89,4 +101,5 @@ function changeLevel(data){
   tiler = new myTiler($('#container'), data.msg.x - Math.floor(width / explorativeImgSize / 2), data.msg.y - Math.floor(height / explorativeImgSize / 2), level);
 
   tiler.refresh();
+
 }

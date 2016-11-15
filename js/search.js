@@ -217,7 +217,7 @@ function oboerequest(query, noContext) {
 				updateVideoScore(key);
 			}
 
-			if(Videos.length < 0){
+			if(Videos.length > 0){
 				sortVideos();
 					$('#sequence-segmentation-button').show();
 			}

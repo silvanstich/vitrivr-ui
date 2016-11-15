@@ -1,6 +1,7 @@
 videojs.options.flash.swf = "video-js.swf";
 var shotStartTime = 0;
 var topLevels = {};
+var centers = {};
 
 function setUpCategories(){
 	var ks = Object.keys(categoryConfig);
@@ -95,6 +96,7 @@ function getFeatureNamesForExplorative(){
 			var id = response[i].id;
 			var topLevel = response[i].topLevel;
 			topLevels[id] = topLevel;
+			centers[id] = {x: response[i].x, y: response[i].y};
 			var $option = $('<option/>', {id: id, text: text, value: id});
 			$('#selectFeature').append($option);
 		}
