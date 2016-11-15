@@ -13,7 +13,13 @@ $(document).ready(function(){
     var img = $(this);
     var src = img.attr('src');
     var id = src.replace(host, '').replace('.jpg', '');
-    if (event.altKey){
+
+    if(event.altKey && event.shiftKey){ // call search of the vitrivr stack
+      $('#colorsketchbutton').click();
+      var shotId = img.attr('data-shotid');
+      search(shotId);
+
+    } else if (event.altKey){ // increase level
       if (level == topLevels[featureName]) return;
       oboerequest(JSON.stringify({
         queryType: 'explorative_tile_representative',
@@ -22,11 +28,13 @@ $(document).ready(function(){
         id: id
       }));
       level++;
-    } else if (event.shiftKey) {
+
+    } else if (event.shiftKey) { // show all cell members of this cell
       $('.highlight').removeClass('highlight');
       var representative = img.attr('data-representative');
       $("[data-representative='" + representative + "']").addClass('highlight');
-    } else {
+
+    } else { // lower level
       if (level == 0) return;
       level--;
       oboerequest(JSON.stringify({
@@ -60,10 +68,11 @@ function show(data){
     var x = element.x;
     var y = element.y;
     var representative = element.representative;
+    var shotid = element.shotid;
 
     var img = new Image();
 
-    setSrc(img, x, y, element.img, representative);
+    setAttr(img, x, y, element.img, representative, shotid);
 
     if(element.img != ''){
         img.src = host + element.img + '.' + thumbnailFileType;
@@ -71,11 +80,12 @@ function show(data){
   }
 }
 
-function setSrc(img, x, y, id, representative){
+function setAttr(img, x, y, id, representative, shotid){
   img.onload = function() {
     var tile = $('<img/>').attr('src', img.src).addClass('thumb');
     tile.attr('id', id);
     tile.attr('data-representative', representative);
+    tile.attr('data-shotid', shotid);
     tiler.show(x, y, tile);
     fetched.set(x, y, tile);
   };
@@ -86,7 +96,10 @@ function recreateContainer(){
   var height = $('#container').height();
   $('#container').remove();
   var $container = $('<div>');
-  $container.attr('id', 'container');
+  $container.attr({
+    'id': 'container',
+    'class': 'explore'
+  });
   $container.width(width).height(height);
 
   $('#result_pane').append($container);
