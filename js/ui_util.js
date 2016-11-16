@@ -10,7 +10,7 @@ function newShotInput() {
 	container.addClass('query-input-container');
 	container.attr('id', id);
 	container.hide();
-	
+
 
 	var color = $('<canvas>');
 	color.addClass('queryinput').addClass('colorsketch');
@@ -25,20 +25,20 @@ function newShotInput() {
 	/*var objects = $('<div>');
 	objects.addClass('queryinput').addClass('objectsketch').addClass('dropzone');
 	container.append(objects);*/
-	
+
 	var concepts = $('<canvas>');
 	concepts.addClass('queryinput').addClass('objectsketch');
 	concepts.attr('width', '360').attr('height', '288');
 	container.append(concepts);
-	
+
 /*
 	var audio = $('<div>');
 	audio.addClass('queryinput').addClass('audiosketch');
 	audio.append('<audio id="audio_' + id + '" src="" controls=""></audio>');
-	var recordButton = $('<button id="record_' + id + '" class="waves-effect waves-light btn btn-large red" style="width: 300px">' + 
-	'<i class="material-icons left">mic_none</i>Record' + 
+	var recordButton = $('<button id="record_' + id + '" class="waves-effect waves-light btn btn-large red" style="width: 300px">' +
+	'<i class="material-icons left">mic_none</i>Record' +
 	'</button>');
-	
+
 	recordButton.click(function(){
 		var button = $(this);
 		if(button.data('recording')){
@@ -56,7 +56,7 @@ function newShotInput() {
 			Fr.voice.record(false);
 		}
 	});
-	
+
 	audio.append(recordButton);
 	container.append(audio);*/
 
@@ -104,7 +104,7 @@ function newShotInput() {
 		}
 	}
 	]);
-	
+
 	context.attach('#' + id + '>.motionsketch', [{
 		header : 'Layer'
 	}, {
@@ -126,7 +126,7 @@ function newShotInput() {
 		}
 	}
 	]);
-	
+
 	/*context.attach('#' + id + '>.objectsketch', [{
 		header : 'Layer'
 	}, {
@@ -145,7 +145,7 @@ function newShotInput() {
 		}
 	}
 	]);*/
-	
+
 	/*context.attach('#' + id + '>.audiosketch', [{
 		header : 'Layer'
 	}, {
@@ -179,8 +179,8 @@ function addVideoContainer(id){
 function addShotContainer(shotInfo, containerId){ //TODO optimize
 	containerId = containerId || shotInfo.videoid;
 	$('#v' + containerId).append(
-		
-		'<div class="shotbox" id="s' + shotInfo.shotid + '" data-startframe="' + shotInfo.start + '" data-endframe="' + shotInfo.start + '">' + 
+
+		'<div class="shotbox" id="s' + shotInfo.shotid + '" data-startframe="' + shotInfo.start + '" data-endframe="' + shotInfo.start + '">' +
 		'<span class="preview">' +
 		'<img class="thumbnail" src="' + thumbnailHost + '' + shotInfo.videoid + '/' + shotInfo.shotid + '.' + thumbnailFileType + '" />' + //see config.js
 		'<div class="tophoverbox">' +
@@ -189,6 +189,7 @@ function addShotContainer(shotInfo, containerId){ //TODO optimize
 		'<span class="material-icons relevanceFeedback relevanceFeedback-add">add</span>' +
 		'<span class="material-icons relevanceFeedback">remove</span>' +
 		(showCategoryWeights ? '<span class="material-icons showCategoryWeights">help</span>' : '') +
+		'<span class="material-icons goToExplorative">explore</span> ' +
 	//	'<span class="material-icons showid">textsms</span>' +
 	//	'<span class="material-icons load_video">movie</span>' +
 		'</div>' +
@@ -198,7 +199,7 @@ function addShotContainer(shotInfo, containerId){ //TODO optimize
 		'</div>' +
 		'</span>' +
 		'</div>'
-		
+
 	);
 	//$('#s' + shotInfo.shotid + '>span>div>.playbutton').on('click', playShot);
 	$('#s' + shotInfo.shotid + '>span>div>.playbutton').on('click', prepare_playback);
@@ -207,6 +208,7 @@ function addShotContainer(shotInfo, containerId){ //TODO optimize
 	if(showCategoryWeights){
 		$('#s' + shotInfo.shotid + '>span>div>.showCategoryWeights').on('click', showScoreComposition);
 	}
+	$('#s' + shotInfo.shotid + '>span>div>.goToExplorative').on('click', goToExplorative);
 	//$('#s' + shotInfo.shotid + '>span>div>.showid').on('click', showVideoId);
 	//$('#s' + shotInfo.shotid + '>span>div>.load_video').on('click', load_video);
 }
@@ -264,7 +266,7 @@ function sortVideos(){
 function updateScores(segmentedVideos) {
 	readSliders();
 	var weightSum = sumWeights();
-	
+
 	for (var key in Shots) {
 		var shotId = Shots[key].shotid;
 
@@ -274,7 +276,7 @@ function updateScores(segmentedVideos) {
 			score += scoreContainer[key] * ScoreWeights[key];
 		}
 		updateScoreInShotContainer(shotId, score / weightSum);
-		
+
 	}
 
 	segmentedVideos = segmentedVideos || false;
@@ -292,7 +294,7 @@ function updateScores(segmentedVideos) {
 		updateVideoScore(key);
 		}
 	}
-	
+
 
 	sortVideos();
 }
@@ -322,10 +324,10 @@ function sequenceSegmentation(){
 			}
 			$('#v' + videoId).remove();
 		}
-		
+
 	}
 	updateScores(true);
-	
+
 }
 
 function playShot(event){
@@ -337,7 +339,7 @@ function playShot(event){
 	shotStartTime = shotInfo.start / 25;
 	var player = videojs('videoPlayer');
 
-	
+
   $('#video-modal').openModal({
   	in_duration: 0,
   	out_duration: 0,
@@ -362,7 +364,7 @@ function relevanceFeedback(event){
 	var shotBox = _this.parent().parent().parent();
 	var shotId = parseInt(shotBox.attr('id').substring(1));
 	var positive = _this.hasClass('relevanceFeedback-add');
-	
+
 	if(positive){
 		if($.inArray(shotId, rf_positive) >= 0){ //remove
 			_this.css('color', 'white');
@@ -388,14 +390,14 @@ function relevanceFeedback(event){
 			_this.css('color', 'red');
 		}
 	}
-	
+
 	if(rf_positive.length > 0){
 		$('#rf-button').show();
 	}else{
 		$('#rf-button').hide();
 	}
-	
-	
+
+
 	console.log(rf_positive);
 	console.log(rf_negative);
 }
@@ -430,7 +432,7 @@ function prepare_playback(event){
 	var videoInfo = Videos[shotInfo.videoid];
 	shotStartTime = shotInfo.start / (videoInfo.frames / videoInfo.seconds);
 	var player = videojs('videoPlayer');
-		
+
    $('#video-modal').openModal({
   	in_duration: 0,
   	out_duration: 0,
@@ -452,10 +454,10 @@ function load_video(event){
 
 function addResultSetFilter(resultSetName){
 	$('#resultset-filter-selection').append(
-		'<p><input class="with-gap" name="result-set" type="radio" id="' + 
-		resultSetName + 
+		'<p><input class="with-gap" name="result-set" type="radio" id="' +
+		resultSetName +
 		'"/><label for="' +
-		resultSetName + 
+		resultSetName +
 		'">' +
 		resultSetName +
 		'</label></p>'
@@ -481,7 +483,7 @@ function destroyCanvas(id) {
 	context.destroy('#' + id + '>.motionsketch' );
 	context.destroy('#' + id + '>.objectsketch' );
 	context.destroy('#' + id + '>.audiosketch' );
-	
+
 	delete shotInputs[id];
 	$('#' + id).slideUp(200, function() {
 		$('#' + id).remove();
@@ -496,7 +498,7 @@ function showSketchSuggestions(shotInputId){
 	if(suggestionPanel.is(":visible")){
 		suggestionPanel.hide();
 	}
-	
+
 	var top = $('#shotInput_' + shotInputId).offset().top + 340;
 	suggestionPanel.css('top', top);
 	suggestionPanel.fadeIn(200);
@@ -511,7 +513,7 @@ function hideSketchSuggestions(callback){
 			callback();
 		}
 	});
-	
+
 }
 
 function addSketchSuggestion(name, id, width, height, dx, dy, shtoInputId){
@@ -523,7 +525,7 @@ function addSketchSuggestion(name, id, width, height, dx, dy, shtoInputId){
 	var img = $('<img width="250" height="250" src="' + previewUrl + '" />');
 	suggestion.append(img);
 	suggestion.append('<div>' + name + '</div>');
-	
+
 	img.click(function(e){
 		var sketchImage = $('<img width="' + width + '" height="' + height + '" src="' + imageUrl + '" />');
 		sketchImage.addClass('autoCompletedImage');
@@ -540,7 +542,7 @@ function addSketchSuggestion(name, id, width, height, dx, dy, shtoInputId){
 			readSliders();
 			var val = 50;
 			$('#concept-weight').get(0).noUiSlider.set(val);
-			
+
 			readSliders();
 			var sum = sumWeights();
 			if(sum > 100){
@@ -550,16 +552,16 @@ function addSketchSuggestion(name, id, width, height, dx, dy, shtoInputId){
 				$('#edge-weight').get(0).noUiSlider.set(ScoreWeights.edge * scale);
 				$('#motion-weight').get(0).noUiSlider.set(ScoreWeights.motion * scale);
 			}
-		
+
 		updateScores(true);
-		
+
 		}
-		
+
 	});
-	
-	
+
+
 	suggestionPanel.append(suggestion);
-	
+
 }
 var hideSketchSuggestionsTimeOut;
 

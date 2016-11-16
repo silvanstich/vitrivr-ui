@@ -1,7 +1,5 @@
 videojs.options.flash.swf = "video-js.swf";
 var shotStartTime = 0;
-var topLevels = {};
-var centers = {};
 
 function setUpCategories(){
 	var ks = Object.keys(categoryConfig);
@@ -96,7 +94,7 @@ function getFeatureNamesForExplorative(){
 			var id = response[i].id;
 			var topLevel = response[i].topLevel;
 			topLevels[id] = topLevel;
-			centers[id] = {x: response[i].x, y: response[i].y};
+			centers[id] = {x: response[i].x, y: response[i].y, id: response[i].identifier};
 			var $option = $('<option/>', {id: id, text: text, value: id});
 			$('#selectFeature').append($option);
 		}
@@ -302,6 +300,7 @@ $(function() {
 		$('#btnShowSidebar').removeClass('open');
 		$(this).siblings().removeClass('active');
 		$(this).addClass('active');
+		fromSearchShotId = undefined;
 	});
 
 	/*  add first canvas  */

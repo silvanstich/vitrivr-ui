@@ -3,6 +3,9 @@ var host = 'http://localhost/vitrivr-ui/thumbnails/';
 var level = undefined;
 var featureName = '';
 var lastClickedId = '';
+var fromSearchShotId = undefined;
+var topLevels = {};
+var centers = {};
 
 $(document).ready(function(){
   $('body').on('click', 'img', function(event){
@@ -10,6 +13,7 @@ $(document).ready(function(){
       $('#container').removeClass('noClick');
       return;
     }
+
     var img = $(this);
     var src = img.attr('src');
     var id = src.replace(host, '').replace('.jpg', '');
@@ -58,7 +62,16 @@ $(document).ready(function(){
       tiler = new myTiler($('#container'), center.x - Math.floor(x/2), center.y - Math.floor(y/2), level);
   });
 
-
+  $('#btnGoDirectToLevel0').click(function(){
+    level = 0;
+    var id = fromSearchShotId ? Shots[fromSearchShotId].videoid + '/' + fromSearchShotId : centers[featureName].id;
+    oboerequest(JSON.stringify({
+      queryType: 'explorative_tile_position',
+      featureName: featureName,
+      level: level,
+      id: id
+    }))
+  });
 });
 
 function show(data){
@@ -86,6 +99,17 @@ function setAttr(img, x, y, id, representative, shotid){
     tile.attr('id', id);
     tile.attr('data-representative', representative);
     tile.attr('data-shotid', shotid);
+    if (fromSearchShotId){
+      if (Shots[shotid]){
+        tile.css(
+          {
+          'border-style': 'solid',
+          'border-width': '2px',
+          'border-color': 'lightgreen'
+          }
+      );
+      }
+    }
     tiler.show(x, y, tile);
     fetched.set(x, y, tile);
   };
@@ -114,5 +138,15 @@ function changeLevel(data){
   tiler = new myTiler($('#container'), data.msg.x - Math.floor(width / explorativeImgSize / 2), data.msg.y - Math.floor(height / explorativeImgSize / 2), level);
 
   tiler.refresh();
+
+}
+
+function goToExplorative(event){
+  var _this = $(this);
+  var shotBox = _this.parent().parent().parent();
+  var shotId = parseInt(shotBox.attr('id').substring(1));
+  recreateContainer();
+  $('#explorebutton').click();
+  fromSearchShotId = shotId;
 
 }
