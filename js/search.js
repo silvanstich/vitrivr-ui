@@ -291,14 +291,16 @@ function oboerequest(query, noContext) {
 			break;
 
 			case "submitShot":
-			$.get(resultServerHostAndPort,
+			$.ajax(
 				{
-					'team': teamNr,
-					'video': data.videoId,
-					'segstart': data.start,
-					'segstop': data.end
-				}
-				, function(data){console.log('submitted. Return ist: ' + data)})
+					url: resultServerHostAndPort + 'team=' + teamNr + '/video=' + data.videoId + '/segstart=' + data.start + '/segstop=' + data.end,
+					type: 'GET',
+					xhrFields:
+					{
+	 					withCredentials: true
+					},
+					success: function(data){console.log('submitted. Return ist: ' + data)}
+				});
 			break;
 
 			default:
