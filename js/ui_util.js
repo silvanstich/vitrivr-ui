@@ -225,7 +225,7 @@ function updateScoreInShotContainer(id, score){
  * Perfect Matches => from 0.8 to 1 will receive a g-value of max
  */
 function scoreToColor(pct) {
-	var max = 0.8;
+	var max = 0.3;
 	var ideal = 230.0;
 	if (pct > max) {
 		var r = 0;

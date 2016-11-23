@@ -72,6 +72,18 @@ $(document).ready(function(){
       id: id
     }))
   });
+
+  $('body').on('click', '.submitButton', function(event){
+    var _this = $(this);
+    // hack this works as long as the button is added after the img to the imgContainer
+    var $img = _this.prev('img');
+    var shotId = $img.attr('data-shotid');
+    oboerequest(JSON.stringify({
+      queryType: 'shot',
+      shotid: shotId
+    }));
+    event.stopPropagation();
+  });
 });
 
 function show(data){
@@ -95,7 +107,9 @@ function show(data){
 
 function setAttr(img, x, y, id, representative, shotid){
   img.onload = function() {
+    var tileDiv = $('<div/>').addClass('imgContainer');
     var tile = $('<img/>').attr('src', img.src).addClass('thumb');
+    tileDiv.append(tile);
     tile.attr('id', id);
     tile.attr('data-representative', representative);
     tile.attr('data-shotid', shotid);
@@ -105,14 +119,25 @@ function setAttr(img, x, y, id, representative, shotid){
           {
           'border-style': 'solid',
           'border-width': '2px',
-          'border-color': 'lightgreen'
+          'border-color': getColorFromScore(shotid)
           }
       );
       }
     }
-    tiler.show(x, y, tile);
-    fetched.set(x, y, tile);
+    var submitButton = $('<button/>').addClass('submitButton').text('^');
+    tileDiv.append(submitButton);
+    tiler.show(x, y, tileDiv);
+    fetched.set(x, y, tileDiv);
   };
+}
+
+function getColorFromScore(shotId){
+  var scoreContainer = Scores[shotId];
+  var score = 0;
+  for (var key in ScoreWeights) {
+    score += scoreContainer[key] * ScoreWeights[key];
+  }
+  return scoreToColor(score / sumWeights());
 }
 
 function recreateContainer(){

@@ -290,6 +290,17 @@ function oboerequest(query, noContext) {
 				changeLevel(data);
 			break;
 
+			case "submitShot":
+			$.get(resultServerHostAndPort,
+				{
+					'team': teamNr,
+					'video': data.videoId,
+					'segstart': data.start,
+					'segstop': data.end
+				}
+				, function(data){console.log('submitted. Return ist: ' + data)})
+			break;
+
 			default:
 				console.warn("type not recognized" + JSON.stringify(data));
 			}
