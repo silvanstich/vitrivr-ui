@@ -217,11 +217,9 @@ function oboerequest(query, noContext) {
 				updateVideoScore(key);
 			}
 
-			if(Videos.length > 0){
-				sortVideos();
-					$('#sequence-segmentation-button').show();
-			}
-				hideProgress();
+			sortVideos();
+			$('#sequence-segmentation-button').show();
+			hideProgress();
 
 			searchRunning = false;
 
@@ -291,16 +289,7 @@ function oboerequest(query, noContext) {
 			break;
 
 			case "submitShot":
-			$.ajax(
-				{
-					url: resultServerHostAndPort + 'team=' + teamNr + '/video=' + data.videoId + '/segstart=' + data.start + '/segstop=' + data.end,
-					type: 'GET',
-					xhrFields:
-					{
-	 					withCredentials: true
-					},
-					success: function(data){console.log('submitted. Return ist: ' + data)}
-				});
+				submitResult(data);
 			break;
 
 			default:
@@ -315,6 +304,20 @@ function oboerequest(query, noContext) {
 	} catch(e) {
 		console.warn(e.message + " | " + e.lineNumber);
 	}
+}
+
+function submitResult(data){
+	console.log("submitting results " + data);
+	$.ajax(
+		{
+			url: resultServerHostAndPort + 'team=' + teamNr + '/video=' + data.videoId + '/segstart=' + data.start + '/segstop=' + data.end,
+			type: 'GET',
+			xhrFields:
+			{
+				withCredentials: true
+			},
+			success: function(data){console.log('submitted. Return ist: ' + data)}
+		});
 }
 
 function addVideos(videoArray){

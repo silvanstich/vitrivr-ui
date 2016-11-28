@@ -11,5 +11,5 @@ const categoryConfig = {
 	motion:{displayName: "Motion", defaultValue: 0, queryOrder: 4}
 };
 const explorativeImgSize = 50;
-const resultServerHostAndPort = "http://localhost:8080/"; // host:port
+const resultServerHostAndPort = "http://131.152.57.197:8080/"; // host:port
 const teamNr = 1;

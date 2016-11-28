@@ -175,3 +175,11 @@ function goToExplorative(event){
   fromSearchShotId = shotId;
 
 }
+
+function submitResultsVitrivr(){
+   console.log('submitting button pressed...');
+   var id = $(this).closest('.shotbox').attr('id');
+   var shot = Shots[id.substring(1)];
+   var data =  {start: shot.start, end: shot.end, videoId: shot.videoid};
+   submitResult(data); // remove s from id
+ };

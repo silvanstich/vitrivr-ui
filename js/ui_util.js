@@ -190,6 +190,7 @@ function addShotContainer(shotInfo, containerId){ //TODO optimize
 		'<span class="material-icons relevanceFeedback">remove</span>' +
 		(showCategoryWeights ? '<span class="material-icons showCategoryWeights">help</span>' : '') +
 		'<span class="material-icons goToExplorative">explore</span> ' +
+		'<span class="material-icons submitResult">arrow_upward</span>' +
 	//	'<span class="material-icons showid">textsms</span>' +
 	//	'<span class="material-icons load_video">movie</span>' +
 		'</div>' +
@@ -209,6 +210,7 @@ function addShotContainer(shotInfo, containerId){ //TODO optimize
 		$('#s' + shotInfo.shotid + '>span>div>.showCategoryWeights').on('click', showScoreComposition);
 	}
 	$('#s' + shotInfo.shotid + '>span>div>.goToExplorative').on('click', goToExplorative);
+	$('#s' + shotInfo.shotid + '>span>div>.submitResult').on('click', submitResultsVitrivr);
 	//$('#s' + shotInfo.shotid + '>span>div>.showid').on('click', showVideoId);
 	//$('#s' + shotInfo.shotid + '>span>div>.load_video').on('click', load_video);
 }
